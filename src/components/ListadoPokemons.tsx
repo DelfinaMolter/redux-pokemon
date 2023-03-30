@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import ListadoPokemonsItem from "../components/ListadoPokemonsItem";
-import {buscarPokemons} from "../queries/pokemon.queries";
-import {Pokemon} from "../types/pokemon.types";
-import {extractPokemonId} from "../services/pokemon.services";
+import { buscarPokemons } from "../queries/pokemon.queries";
+import { Pokemon } from "../types/pokemon.types";
+import { extractPokemonId } from "../services/pokemon.services";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { getPokemons, getSelectedPokemon } from "../redux/pokemonSlice";
 
 
 /**
@@ -17,25 +19,21 @@ import {extractPokemonId} from "../services/pokemon.services";
  * @author Digital House
  */
 const ListadoPokemons = () => {
-    const [isLoading, setLoading] = useState(true);
-    const [pokemons, setPokemons] = useState<Pokemon[] | null>(null);
+    const dispatch = useAppDispatch()
+    const pokemons = useAppSelector(state => state.pokemon.pokemons)
 
     useEffect(() => {
         //Deberan realizar la busqueda con la variable correspondiente
-        buscarPokemons("").then(data => {
-            setLoading(false);
-            setPokemons(data);
-        });
-    },[])
+        dispatch(getPokemons(""))
+    }, [])
 
-    if (isLoading) return <div>Cargando pokemons...</div>
 
     return (
         <div id="listadoCategorias">
             {pokemons && pokemons.map((pokemon: Pokemon) => (
                 <ListadoPokemonsItem pokemon={pokemon}
-                                     seleccionarPokemon={() => {}}
-                                     key={extractPokemonId(pokemon.url)}/>
+                    seleccionarPokemon={() => dispatch(getSelectedPokemon(pokemon.url))}
+                    key={extractPokemonId(pokemon.url)} />
             ))}
         </div>
     );

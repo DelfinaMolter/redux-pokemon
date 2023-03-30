@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {PokemonWithProps} from "../types/pokemon.types";
 import {Sprite} from "../types/sprite.types";
+import { useAppSelector } from "../redux/hooks";
 
 const pokemonMock: PokemonWithProps = {
     id: 4,
@@ -23,16 +24,17 @@ const pokemonMock: PokemonWithProps = {
  */
 
 const VistaPokemon = () => {
+    const pokemon = useAppSelector(state => state.pokemon.selectedPokemon)
 
     //EXTRA: Pueden manejar el proceso de vista de un pokemon seleccionado pasando por props una funcion
     //que almacene en un estado el componente seleccionado y con el name de dicho pokemon hacer el fetch dentro de este 
     //componente de vista
 
-    return pokemonMock ? (
+    return pokemon ? (
         <div className="vistaPokemon">
-            <h4>Pokemon: {pokemonMock.name}</h4>
-            <h5>#{pokemonMock.id}</h5>
-            <img src={pokemonMock.sprites.other.home.front_default} alt={pokemonMock.name} />
+            <h4>Pokemon: {pokemon.name}</h4>
+            <h5>#{pokemon.id}</h5>
+            <img src={pokemon.sprites.other.home.front_default} alt={pokemon.name} />
         </div>
     ): null;
 }
