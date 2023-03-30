@@ -1,12 +1,18 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { Pokemon, PokemonWithProps } from "../types/pokemon.types";
 
+
+const apiPokemon = async (name: string) => {
+    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
+    const data = await response.json();
+    return data.results.filter((pokemon: Pokemon) => pokemon.name.toLowerCase().startsWith(name.toLowerCase()))
+}
+
 export const getPokemons = createAsyncThunk(
     '/getPokemons',
     async (name: string) => {
-        const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
-        const data = await response.json();
-        return data.results.filter((pokemon: Pokemon) => pokemon.name.toLowerCase().startsWith(name.toLowerCase()))
+        const response = await apiPokemon(name)
+        return response
     }
 )
 
