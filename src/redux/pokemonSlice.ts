@@ -29,11 +29,13 @@ interface initialType {
     busqueda: string
     pokemons: never[]
     selectedPokemon: PokemonWithProps
+    historial: Pokemon[]
 }
 
 const initialState: initialType = {
     busqueda: '',
     pokemons: [],
+    historial: [],
     selectedPokemon: {
         name: "",
         id: 0,
@@ -55,22 +57,22 @@ export const pokemonSlice = createSlice({
     reducers: {
         actionBusqueda: (state, action) => {
             state.busqueda = action.payload
+        },
+        actionHistorial: (state, action) => {
+            state.historial.push(action.payload)
         }
     },
     extraReducers: (builder) => {
-        // Add reducers for additional action types here, and handle loading state as needed
         builder.addCase(getPokemons.fulfilled, (state, action) => {
-            // Add user to the state array
             state.pokemons = action.payload
         })
         builder.addCase(getSelectedPokemon.fulfilled, (state, action) => {
-            // Add user to the state array
             state.selectedPokemon = action.payload
         })
     },
 })
 
-export const { actionBusqueda } = pokemonSlice.actions
+export const { actionBusqueda, actionHistorial } = pokemonSlice.actions
 
 
 export default pokemonSlice.reducer

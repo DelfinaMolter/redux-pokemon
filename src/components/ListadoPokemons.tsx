@@ -4,7 +4,7 @@ import { buscarPokemons } from "../queries/pokemon.queries";
 import { Pokemon } from "../types/pokemon.types";
 import { extractPokemonId } from "../services/pokemon.services";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { getPokemons, getSelectedPokemon } from "../redux/pokemonSlice";
+import { actionHistorial, getPokemons, getSelectedPokemon } from "../redux/pokemonSlice";
 
 
 /**
@@ -28,11 +28,16 @@ const ListadoPokemons = () => {
     }, [])
 
 
+    const hacerDosCosas = (pokemon: Pokemon) => {
+        dispatch(getSelectedPokemon(pokemon.url))
+        dispatch(actionHistorial(pokemon))
+    }
+
     return (
         <div id="listadoCategorias">
             {pokemons && pokemons.map((pokemon: Pokemon) => (
                 <ListadoPokemonsItem pokemon={pokemon}
-                    seleccionarPokemon={() => dispatch(getSelectedPokemon(pokemon.url))}
+                    seleccionarPokemon={() => hacerDosCosas(pokemon)}
                     key={extractPokemonId(pokemon.url)} />
             ))}
         </div>
