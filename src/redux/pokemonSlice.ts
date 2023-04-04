@@ -4,8 +4,12 @@ import { Pokemon, PokemonWithProps } from "../types/pokemon.types";
 
 const apiPokemon = async (name: string) => {
     const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
-    const data = await response.json();
-    return data.results.filter((pokemon: Pokemon) => pokemon.name.toLowerCase().startsWith(name.toLowerCase()))
+    if (response.ok) {
+        const data = await response.json();
+        return data.results.filter((pokemon: Pokemon) => pokemon.name.toLowerCase().startsWith(name.toLowerCase()))
+    } else {
+        throw new Error('Pagina no encontrada')
+    }
 }
 
 export const getPokemons = createAsyncThunk(
@@ -30,12 +34,16 @@ interface initialType {
     pokemons: never[]
     selectedPokemon: PokemonWithProps
     historial: Pokemon[]
+    error: string | undefined
+
+
 }
 
 const initialState: initialType = {
     busqueda: '',
     pokemons: [],
     historial: [],
+    error: "",
     selectedPokemon: {
         name: "",
         id: 0,
@@ -59,12 +67,18 @@ export const pokemonSlice = createSlice({
             state.busqueda = action.payload
         },
         actionHistorial: (state, action) => {
-            state.historial.push(action.payload)
+            if (!state.historial.find(poke => poke.name === action.payload.name)) {
+                state.historial.push(action.payload)
+            }
         }
     },
     extraReducers: (builder) => {
         builder.addCase(getPokemons.fulfilled, (state, action) => {
             state.pokemons = action.payload
+            state.error = ""
+        })
+        builder.addCase(getPokemons.rejected, (state, action) => {
+            state.error = action.error.message
         })
         builder.addCase(getSelectedPokemon.fulfilled, (state, action) => {
             state.selectedPokemon = action.payload
