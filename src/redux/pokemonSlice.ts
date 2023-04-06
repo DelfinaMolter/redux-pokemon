@@ -34,6 +34,7 @@ interface initialType {
     pokemons: never[]
     selectedPokemon: PokemonWithProps
     historial: Pokemon[]
+    historialBusquedas: string[]
     error: string | undefined
 
 
@@ -43,6 +44,7 @@ const initialState: initialType = {
     busqueda: '',
     pokemons: [],
     historial: [],
+    historialBusquedas: [],
     error: "",
     selectedPokemon: {
         name: "",
@@ -76,6 +78,9 @@ export const pokemonSlice = createSlice({
         builder.addCase(getPokemons.fulfilled, (state, action) => {
             state.pokemons = action.payload
             state.error = ""
+            if (action.payload.length && !state.historialBusquedas.find(busqueda => busqueda === state.busqueda)) {
+                state.historialBusquedas.push(state.busqueda)
+            }
         })
         builder.addCase(getPokemons.rejected, (state, action) => {
             state.error = action.error.message

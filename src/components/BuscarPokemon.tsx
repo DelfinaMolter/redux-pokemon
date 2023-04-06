@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAppDispatch } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { actionBusqueda, getPokemons } from "../redux/pokemonSlice";
 import ListadoPokemons from "./ListadoPokemons";
 import VistaPokemon from "./VistaPokemon";
