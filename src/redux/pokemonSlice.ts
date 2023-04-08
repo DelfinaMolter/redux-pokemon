@@ -78,7 +78,7 @@ export const pokemonSlice = createSlice({
         builder.addCase(getPokemons.fulfilled, (state, action) => {
             state.pokemons = action.payload
             state.error = ""
-            if (action.payload.length && !state.historialBusquedas.find(busqueda => busqueda === state.busqueda)) {
+            if (action.payload.length && !state.historialBusquedas.find(busqueda => busqueda === state.busqueda) && state.busqueda ) {
                 state.historialBusquedas.push(state.busqueda)
             }
         })
